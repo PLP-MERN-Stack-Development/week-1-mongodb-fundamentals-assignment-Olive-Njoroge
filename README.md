@@ -1,47 +1,102 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19690178&assignment_repo_type=AssignmentRepo)
-# MongoDB Fundamentals Assignment
+````markdown
+# PLP Bookstore MongoDB Scripts
 
-This assignment focuses on learning MongoDB fundamentals including setup, CRUD operations, advanced queries, aggregation pipelines, and indexing.
+This repository contains MongoDB scripts for managing the PLP Bookstore database. The scripts include queries for finding, sorting, updating, and aggregating books.
 
-## Assignment Overview
+## Prerequisites
 
-You will:
-1. Set up a MongoDB database
-2. Perform basic CRUD operations
-3. Write advanced queries with filtering, projection, and sorting
-4. Create aggregation pipelines for data analysis
-5. Implement indexing for performance optimization
+- MongoDB installed on your machine or access to a MongoDB server.
+- `mongosh` (MongoDB Shell) for running commands interactively or scripts.
+- Basic knowledge of MongoDB queries and aggregation pipelines.
 
-## Getting Started
+## How to Run the Scripts
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install MongoDB locally or set up a MongoDB Atlas account
-4. Run the provided `insert_books.js` script to populate your database
-5. Complete the tasks in the assignment document
+1. **Start MongoDB server** if it’s not already running:
+   ```bash
+   mongod
+````
 
-## Files Included
+2. **Open MongoDB shell (`mongosh`)**:
 
-- `Week1-Assignment.md`: Detailed assignment instructions
-- `insert_books.js`: Script to populate your MongoDB database with sample book data
+   ```bash
+   mongosh
+   ```
 
-## Requirements
+3. **Switch to the bookstore database:**
 
-- Node.js (v18 or higher)
-- MongoDB (local installation or Atlas account)
-- MongoDB Shell (mongosh) or MongoDB Compass
+   ```js
+   use plp_bookstore
+   ```
 
-## Submission
+4. **Run queries or scripts:**
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+   * To find books in a specific genre:
 
-1. Complete all tasks in the assignment
-2. Add your `queries.js` file with all required MongoDB queries
-3. Include a screenshot of your MongoDB database
-4. Update the README.md with your specific setup instructions
+     ```js
+     db.books.find({ genre: "fiction" }).pretty()
+     ```
 
-## Resources
+   * To find books in stock published after 2010 with specific fields:
 
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [MongoDB University](https://university.mongodb.com/)
-- [MongoDB Node.js Driver](https://mongodb.github.io/node-mongodb-native/) 
+     ```js
+     db.books.find(
+       { in_stock: true, publish_year: { $gt: 2010 } },
+       { title: 1, author: 1, price: 1 }
+     ).pretty()
+     ```
+
+   * To sort books by price ascending:
+
+     ```js
+     db.books.find().sort({ price: 1 }).pretty()
+     ```
+
+   * To paginate results (5 books per page):
+
+     ```js
+     // Page 1
+     db.books.find().limit(5).pretty()
+
+     // Page 2
+     db.books.find().skip(5).limit(5).pretty()
+     ```
+
+   * To run aggregation pipelines (example: average price by genre):
+
+     ```js
+     db.books.aggregate([
+       {
+         $group: {
+           _id: "$genre",
+           average_price: { $avg: "$price" }
+         }
+       }
+     ])
+     ```
+
+5. **Creating indexes for performance:**
+
+   * Create index on title:
+
+     ```js
+     db.books.createIndex({ title: 1 })
+     ```
+
+   * Create compound index on author and published\_year:
+
+     ```js
+     db.books.createIndex({ author: 1, published_year: 1 })
+     ```
+
+6. **Checking query performance with explain():**
+
+   ```js
+   db.books.find({ title: "Animal Farm" }).explain("executionStats")
+   ```
+
+## Notes
+
+* Replace queries with your own filters as needed.
+
+---
+
