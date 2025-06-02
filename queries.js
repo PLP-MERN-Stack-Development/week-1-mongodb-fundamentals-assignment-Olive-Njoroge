@@ -1,4 +1,4 @@
-// 1. Insert at least 10 book documents into your collection
+// Task 2: Basic CRUD Operations
 db.books.insertMany([
     {
         title: 'To Kill a Mockingbird',
@@ -137,6 +137,10 @@ db.books.updateOne({title: "The Alchemist"}, {$set: {price: 12.50}})
 //Delete a book by its title
 db.books.deleteOne({title: "Animal Farm"})
 
+
+
+
+// Task 3: Advanced Queries
 //Write a query to find books that are both in stock and published after 2010
 db.books.find({in_stock: true,  published_year: {$gt: 2010}})
 
@@ -156,6 +160,9 @@ db.books.find().skip(5).limit(5) // Page 2 (skip first 5, get next 5)
 db.books.find().skip(10).limit(5) // Page 3 (skip first 10, get next 5)
 
 
+
+
+//Task 4: Aggregation Pipeline
 //Create an aggregation pipeline to calculate the average price of books by genre
 db.books.aggregate([{
     $group: {
@@ -197,6 +204,10 @@ db.books.aggregate([
     }
   ])
 
+
+
+  
+  //Task 5: Indexing
   //Create an index on the title field for faster searches
   db.books.createIndex({title:1})
 
