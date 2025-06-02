@@ -136,3 +136,21 @@ db.books.updateOne({title: "The Alchemist"}, {$set: {price: 12.50}})
 
 //Delete a book by its title
 db.books.deleteOne({title: "Animal Farm"})
+
+//Write a query to find books that are both in stock and published after 2010
+db.books.find({in_stock: true,  published_year: {$gt: 2010}})
+
+//Use projection to return only the title, author, and price fields in your queries
+db.books.find({},{title: true, author: true, price: true, _id: false})
+
+//Implement sorting to display books by price (both ascending and descending)
+//Sort by ascending
+db.books.find().sort({price: 1})
+
+//Sort by descending
+db.books.find().sort({price: -1})
+
+//Use the limit and skip methods to implement pagination (5 books per page)
+db.books.find().limit(5) // Page 1 (first 5 books)
+db.books.find().skip(5).limit(5) // Page 2 (skip first 5, get next 5)
+db.books.find().skip(10).limit(5) // Page 3 (skip first 10, get next 5)
