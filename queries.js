@@ -196,4 +196,14 @@ db.books.aggregate([
       $sort: { _id: 1 }
     }
   ])
+
+  //Create an index on the title field for faster searches
+  db.books.createIndex({title:1})
+
+  //Create a compound index on author and published_year
+  db.books.createIndex({ author: 1, published_year: 1 })
+
+  //Udb.books.find({ title: "Animal Farm" }).explain("executionStats")
+  db.books.find({ title: "Animal Farm" }).explain("executionStats")
+
   
