@@ -154,3 +154,46 @@ db.books.find().sort({price: -1})
 db.books.find().limit(5) // Page 1 (first 5 books)
 db.books.find().skip(5).limit(5) // Page 2 (skip first 5, get next 5)
 db.books.find().skip(10).limit(5) // Page 3 (skip first 10, get next 5)
+
+
+//Create an aggregation pipeline to calculate the average price of books by genre
+db.books.aggregate([{
+    $group: {
+        _id: "$genre", average_price: {$avg: "$price"}
+    }
+}])
+
+//Create an aggregation pipeline to find the author with the most books in the collection
+db.books.aggregate([{
+    $group: {
+        _id: "$author", numberOfBooks: {$sum : 1}
+    }
+},{
+    $sort: {numberOfBooks: -1}
+},{
+    $limit: 1
+}])
+
+//Implement a pipeline that groups books by publication decade and counts them
+db.books.aggregate([
+    {
+      $project: {
+        decade: {
+          $concat: [
+            { $toString: { $multiply: [{ $floor: { $divide: ["$published_year", 10] } }, 10] } },
+            "s"
+          ]
+        }
+      }
+    },
+    {
+      $group: {
+        _id: "$decade",
+        book_count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { _id: 1 }
+    }
+  ])
+  
